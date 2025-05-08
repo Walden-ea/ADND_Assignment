@@ -34,13 +34,13 @@ class MultiHeadAttention(nn.Module):
         Q_reshaped = Q_proj.view(self.batch_size, -1, self.num_heads, self.d_k) # -1 is the length of the sequence
         Q = Q_reshaped.transpose(1, 2) # so head is 1st (batch_size is on 0 pos)  
 
-        K = self.weights_K(K).view(self.batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
-        V = self.weights_V(V).view(self.batch_size, -1, self.num_heads, self.d_v).transpose(1, 2)
+        K = self.weights_K(K).reshape(self.batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.weights_V(V).reshape(self.batch_size, -1, self.num_heads, self.d_v).transpose(1, 2)
 
         output = ScaledDotProductAttention(Q, K, V, self.d_k, mask)
 
         O_swap = output.transpose(1, 2)
-        O_flatten = O_swap.contiguous().view(self.batch_size, -1, self.num_heads * self.d_k)
+        O_flatten = O_swap.reshape(self.batch_size, -1, self.num_heads * self.d_k)
           
         output = self.weights_output(O_flatten)
 
