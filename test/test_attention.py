@@ -19,7 +19,7 @@ def test_attention():
     K = torch.randn(batch_size, seq_len, d_model)
     V = torch.randn(batch_size, seq_len, d_model)
 
-    mha = MultiHeadAttention(d_model, num_heads, d_k, d_v, batch_size)
+    mha = MultiHeadAttention(d_model, num_heads, d_k, d_v, batch_size, seq_len)
     output = mha(Q, K, V)
 
     assert output.shape == (batch_size, seq_len, d_model), \

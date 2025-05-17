@@ -32,7 +32,7 @@ class Encoder(torch.nn.Module):
         self.encoder_layer_5 = EncoderLayer(d_model, num_heads, d_k, d_v, batch_size, d_inner, seq_len)
         self.encoder_layer_6 = EncoderLayer(d_model, num_heads, d_k, d_v, batch_size, d_inner, seq_len)
 
-    def forward(self, x, mask):
+    def forward(self, x, mask = None):
         out = self.encoder_layer_1(x, mask)
         out = self.encoder_layer_2(out, mask)
         out = self.encoder_layer_3(out, mask)

@@ -36,7 +36,7 @@ class Decoder(torch.nn.Module):
         self.decoder_layer_2 = DecoderLayer(embed_dim, n_heads, d_k, d_v, batch_size, seq_len, d_inner)
         self.decoder_layer_3  = DecoderLayer(embed_dim, n_heads, d_k, d_v, batch_size, seq_len, d_inner)
 
-    def forward(self, x, encoder_data, decoder_mask, encoder_mask):
+    def forward(self, x, encoder_data, decoder_mask = None, encoder_mask = None):
         x = self.decoder_layer_1(x, encoder_data, decoder_mask, encoder_mask)
         x = self.decoder_layer_2(x, encoder_data, decoder_mask, encoder_mask)
         x = self.decoder_layer_3(x, encoder_data, decoder_mask, encoder_mask)

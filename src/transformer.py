@@ -16,7 +16,7 @@ class Transformer(nn.Module):
         self.batch_size = batch_size
         self.d_inner = d_inner
         self.max_len = max_len
-        self.Embedding = Embedding(vocab_size, d_model)
+        self.Embedding = nn.Embedding(vocab_size, d_model)
         self.PosEnc = PosEncoding(d_model, max_len)
         self.Encoder = Encoder(d_model, num_heads, d_k, d_v, batch_size, d_inner, max_len)
         self.Decoder = Decoder(d_model, num_heads, d_k, d_v, batch_size, max_len, d_inner)
