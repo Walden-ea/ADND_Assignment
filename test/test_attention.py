@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 
 from attention import MultiHeadAttention
 
-def test_mha_output_shape():
+def test_attention():
     batch_size = 2
     seq_len = 3
     d_model = 8
