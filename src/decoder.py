@@ -16,7 +16,7 @@ class DecoderLayer(torch.nn.Module):
         self.norm2 = torch.nn.LayerNorm(embed_dim)
         self.norm3 = torch.nn.LayerNorm(embed_dim)
 
-    def forward(self, x, encoder_data):
+    def forward(self, x, encoder_data): # TODO: add masking!!
         self_attn_output, _ = self.self_attn(x, x, x)
         x = x + self_attn_output
         x = self.norm1(x)
@@ -34,9 +34,13 @@ class Decoder(torch.nn.Module):
     def __init__(self, embed_dim, n_heads):
         super(Decoder, self).__init__()
 
-        self.decoder_layer_1 = DecoderLayer(embed_dim, n_heads)
+        self.decoder_layer_1 = DecoderLayer(embed_dim, n_heads) 
         self.decoder_layer_2 = DecoderLayer(embed_dim, n_heads)
         self.decoder_layer_3  = DecoderLayer(embed_dim, n_heads)
 
     def forward(self, x, encoder_data):
-        pass
+        x = self.decoder_layer_1(x, encoder_data)
+        x = self.decoder_layer_2(x, encoder_data)
+        x = self.decoder_layer_3(x, encoder_data)
+
+        return x
