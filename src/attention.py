@@ -5,8 +5,8 @@ import math
 
 def ScaledDotProductAttention(Q, K, V, d, mask=None):
     scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(torch.tensor(d, dtype=torch.float32))
-    if mask:
-        scores = scores.masked_fill(mask == 0, -math.inf)
+    if mask is not None:
+        scores = scores.masked_fill(mask, -math.inf)
 
     weights = F.softmax(scores, dim = -1) # compute over all key positions, which is the last dim
     output = torch.matmul(weights, V)

@@ -22,32 +22,44 @@ class Transformer(nn.Module):
         self.Decoder = Decoder(d_model, num_heads, d_k, d_v, batch_size, max_len, d_inner)
         self.Output_layer = nn.Linear(d_model, vocab_size)
 
-    def forward(self, tokens_encoding, tokens_decoding):
+    def forward(self, token_idx_encoder, token_idx_decoder):
+        encoder_mask = self.create_padding_mask(token_idx_encoder)
+        decoder_mask = self.create_padding_mask(token_idx_decoder)
+        look_ahead = self.create_look_ahead_mask(token_idx_decoder.size(1)).to(token_idx_decoder.device)
 
-        embedding = self.Embedding(tokens_encoding)
+        combined_decoder_mask = look_ahead | decoder_mask
+
+        embedding = self.Embedding(token_idx_encoder)
         input_encoder = self.PosEnc(embedding)
-        output_encoder = self.Encoder(input_encoder)
+        output_encoder = self.Encoder(input_encoder, encoder_mask)
 
-        embedding = self.Embedding(tokens_decoding)
+        embedding = self.Embedding(token_idx_decoder)
         input_decoder = self.PosEnc(embedding)
-        output_decoder = self.Decoder(input_decoder, output_encoder)
+        output_decoder = self.Decoder(input_decoder, output_encoder, combined_decoder_mask, encoder_mask)
         
         logits = self.Output_layer(output_decoder)
 
         return logits
     
-transformer = Transformer()
-batch_size = 4
-max_len = 30
-vocab_size = 32
+    def create_padding_mask(self, seq):
+      return (seq == 0).unsqueeze(1).unsqueeze(2) 
+    
+    def create_look_ahead_mask(self, seq_len):
+      # create square matrix seq_len x seq_len; then upper triangular
+      return torch.triu(torch.ones((seq_len, seq_len)), diagonal=1).bool()
+    
+# transformer = Transformer()
+# batch_size = 4
+# max_len = 30
+# vocab_size = 32
 
-# give 32 random token indinces (batch of 4, sequence length 30)
-tokens_encoding = torch.randint(0, vocab_size, (batch_size, max_len))
-tokens_decoding = torch.randint(0, vocab_size, (batch_size, max_len))
+# # give 32 random token indinces (batch of 4, sequence length 30)
+# tokens_encoding = torch.randint(0, vocab_size, (batch_size, max_len))
+# tokens_decoding = torch.randint(0, vocab_size, (batch_size, max_len))
 
-with torch.no_grad():
-    logits = transformer(tokens_encoding, tokens_decoding)
-    probs = F.softmax(logits, dim=-1)
-    predicted = torch.argmax(probs, dim=-1)  # shape: [batch_size, seq_len]
+# with torch.no_grad():
+#     logits = transformer(tokens_encoding, tokens_decoding)
+#     probs = F.softmax(logits, dim=-1)
+#     predicted = torch.argmax(probs, dim=-1)  # shape: [batch_size, seq_len]
 
-    print(f"Predicted token indices: {predicted}")
+#     print(f"Predicted token indices: {predicted}")

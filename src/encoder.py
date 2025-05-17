@@ -12,8 +12,8 @@ class EncoderLayer(nn.Module):
         self.norm2 = nn.LayerNorm(d_model)
         self.FFN = FFN(d_model, d_inner)
 
-    def forward(self, input):
-        attention_output = self.MHA(input, input, input)
+    def forward(self, input, mask):
+        attention_output = self.MHA(input, input, input, mask)
         norm_output = self.norm1(input + attention_output)
 
         fnn_output = self.FFN(norm_output)
@@ -32,11 +32,11 @@ class Encoder(torch.nn.Module):
         self.encoder_layer_5 = EncoderLayer(d_model, num_heads, d_k, d_v, batch_size, d_inner, seq_len)
         self.encoder_layer_6 = EncoderLayer(d_model, num_heads, d_k, d_v, batch_size, d_inner, seq_len)
 
-    def forward(self, input):
-        out = self.encoder_layer_1(input)
-        out = self.encoder_layer_2(out)
-        out = self.encoder_layer_3(out)
-        out = self.encoder_layer_4(out)
-        out = self.encoder_layer_5(out)
-        out = self.encoder_layer_6(out)
+    def forward(self, x, mask):
+        out = self.encoder_layer_1(x, mask)
+        out = self.encoder_layer_2(out, mask)
+        out = self.encoder_layer_3(out, mask)
+        out = self.encoder_layer_4(out, mask)
+        out = self.encoder_layer_5(out, mask)
+        out = self.encoder_layer_6(out, mask)
         return out
