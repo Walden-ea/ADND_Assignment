@@ -37,6 +37,8 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, Q, K, V, mask=None):
         Q_proj = self.weights_Q(Q)
+        print(Q_proj.shape)
+        print(self.batch_size, self.seq_len, self.num_heads, self.d_k)
         Q_reshaped = Q_proj.view(self.batch_size, self.seq_len, self.num_heads, self.d_k) 
         Q = Q_reshaped.transpose(1, 2) # so head is 1st to compute attention per head
 

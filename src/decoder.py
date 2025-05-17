@@ -16,6 +16,8 @@ class DecoderLayer(torch.nn.Module):
 
     def forward(self, x, encoder_data, decoder_mask, encoder_mask): 
         # decoder attn
+        # print(x.shape)
+        # print(decoder_mask)
         self_attn_output = self.self_attn(x, x, x, decoder_mask)
         x = x + self_attn_output
         x = self.norm1(x)
@@ -31,7 +33,8 @@ class DecoderLayer(torch.nn.Module):
         return x
 
 class Decoder(torch.nn.Module):
-    def __init__(self, embed_dim, n_heads, d_k, d_v, batch_size, seq_len, d_inner):
+    def __init__(self, embed_dim, n_heads, d_k, d_v, batch_size, d_inner, seq_len):
+        # print(seq_len)
         super(Decoder, self).__init__()
 
         self.decoder_layer_1 = DecoderLayer(embed_dim, n_heads, d_k, d_v, batch_size, seq_len, d_inner) # TODO: pretend it's 6 decoder layers not 3

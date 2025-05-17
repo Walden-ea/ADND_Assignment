@@ -3,9 +3,10 @@
 TODO:
  - add masking DONE
  - transformer + tests DONE
- - decoder, pos en tests
- - comms
+ - comms DONE
  - cleanup py files DONE
- - check everything
+ - decoder test DONE
+ - pos en tests
  - add masking tests
  - fix pos encoding
+ - check everything

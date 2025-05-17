@@ -19,7 +19,7 @@ class Transformer(nn.Module):
         self.Embedding = nn.Embedding(vocab_size, d_model)
         self.PosEnc = PosEncoding(d_model, max_len)
         self.Encoder = Encoder(d_model, num_heads, d_k, d_v, batch_size, d_inner, max_len)
-        self.Decoder = Decoder(d_model, num_heads, d_k, d_v, batch_size, max_len, d_inner)
+        self.Decoder = Decoder(d_model, num_heads, d_k, d_v, batch_size, d_inner, max_len)
         self.Output_layer = nn.Linear(d_model, vocab_size)
 
     def forward(self, token_idx_encoder, token_idx_decoder):
