@@ -1,5 +1,11 @@
 # ADND_Assignment
 
+## Testing
+
+```
+pytest
+```
+
 TODO:
  - add masking DONE
  - transformer + tests DONE
@@ -7,6 +13,6 @@ TODO:
  - cleanup py files DONE
  - decoder test DONE
  - pos en tests DONE
- - add masking tests
- - fix pos encoding
+ - add masking tests DONE
+ - fix pos encoding DONE
  - check everything
