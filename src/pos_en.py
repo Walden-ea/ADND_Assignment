@@ -24,13 +24,7 @@ class PosEncoding(nn.Module):
         # print(self.encoding)
         
     def forward(self, x):
-        batch_size = x.shape[0]
-        # print(x.shape)
-        # print(self.encoding[:, :x.shape[2]].shape)
-
-        pos_enc = self.encoding[:, :x.shape[2]].unsqueeze(0).expand(batch_size, -1, -1) # TODO: check it works
-        # print(pos_enc.shape)
-        # return x + self.encoding[:, :x.shape[2]]
+        pos_enc = self.encoding[:, :x.shape[2]].unsqueeze(0)
         return x + pos_enc
         
 

@@ -6,7 +6,7 @@ TODO:
  - comms DONE
  - cleanup py files DONE
  - decoder test DONE
- - pos en tests
+ - pos en tests DONE
  - add masking tests
  - fix pos encoding
  - check everything
