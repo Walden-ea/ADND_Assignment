@@ -2,10 +2,10 @@
 
 TODO:
  - add masking DONE
- - add padding indices
  - transformer + tests DONE
  - decoder, pos en tests
  - comms
- - cleanup py files
+ - cleanup py files DONE
  - check everything
- - inference check how should work
+ - add masking tests
+ - fix pos encoding

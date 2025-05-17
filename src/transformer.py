@@ -48,18 +48,3 @@ class Transformer(nn.Module):
       # create square matrix seq_len x seq_len; then upper triangular
       return torch.triu(torch.ones((seq_len, seq_len)), diagonal=1).bool()
     
-# transformer = Transformer()
-# batch_size = 4
-# max_len = 30
-# vocab_size = 32
-
-# # give 32 random token indinces (batch of 4, sequence length 30)
-# tokens_encoding = torch.randint(0, vocab_size, (batch_size, max_len))
-# tokens_decoding = torch.randint(0, vocab_size, (batch_size, max_len))
-
-# with torch.no_grad():
-#     logits = transformer(tokens_encoding, tokens_decoding)
-#     probs = F.softmax(logits, dim=-1)
-#     predicted = torch.argmax(probs, dim=-1)  # shape: [batch_size, seq_len]
-
-#     print(f"Predicted token indices: {predicted}")
