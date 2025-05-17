@@ -1,11 +1,13 @@
 from embedding import Embedding
 from pos_en import PosEncoding
 from encoder import Encoder
+from decoder import Decoder
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 class Transformer(nn.Module):
-    def __init__(self, d_model = 512, num_heads = 8, d_k = 64, d_v = 64, batch_size = 4, d_inner = 2048, max_len = 30):
+    def __init__(self, d_model = 512, num_heads = 8, d_k = 64, d_v = 64, batch_size = 4, d_inner = 2048, max_len = 30, vocab_size = 32):
         super().__init__()
         self.d_model = d_model
         self.num_heads = num_heads
@@ -14,27 +16,38 @@ class Transformer(nn.Module):
         self.batch_size = batch_size
         self.d_inner = d_inner
         self.max_len = max_len
+        self.Embedding = Embedding(vocab_size, d_model)
+        self.PosEnc = PosEncoding(d_model, max_len)
+        self.Encoder = Encoder(d_model, num_heads, d_k, d_v, batch_size, d_inner, max_len)
+        self.Decoder = Decoder(d_model, num_heads, d_k, d_v, batch_size, max_len, d_inner)
+        self.Output_layer = nn.Linear(d_model, vocab_size)
 
-    def forward(self, tokens):
+    def forward(self, tokens_encoding, tokens_decoding):
 
-        Embed = Embedding(self.max_len, self.d_model)
-          # give 32 random token indinces (batch of 4, sequence length 30)
-        embedding = Embed(tokens)
+        embedding = self.Embedding(tokens_encoding)
+        input_encoder = self.PosEnc(embedding)
+        output_encoder = self.Encoder(input_encoder)
 
-        PosEnc = PosEncoding(self.d_model, self.max_len)
-        input = PosEnc(embedding)
+        embedding = self.Embedding(tokens_decoding)
+        input_decoder = self.PosEnc(embedding)
+        output_decoder = self.Decoder(input_decoder, output_encoder)
+        
+        logits = self.Output_layer(output_decoder)
 
-        print(embedding.shape)
-
-        encoder = Encoder(self.d_model, self.num_heads, self.d_k, self.d_v, self.batch_size, self.d_inner, self.max_len)
-
-        output = encoder(input)
-
-        print(output.shape) # should be (4, 30, 512)
-
+        return logits
+    
 transformer = Transformer()
 batch_size = 4
 max_len = 30
-tokens = torch.randint(0, 32, (batch_size, max_len))
+vocab_size = 32
 
-transformer(tokens)
+# give 32 random token indinces (batch of 4, sequence length 30)
+tokens_encoding = torch.randint(0, vocab_size, (batch_size, max_len))
+tokens_decoding = torch.randint(0, vocab_size, (batch_size, max_len))
+
+with torch.no_grad():
+    logits = transformer(tokens_encoding, tokens_decoding)
+    probs = F.softmax(logits, dim=-1)
+    predicted = torch.argmax(probs, dim=-1)  # shape: [batch_size, seq_len]
+
+    print(f"Predicted token indices: {predicted}")
