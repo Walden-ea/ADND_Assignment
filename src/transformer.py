@@ -1,4 +1,3 @@
-from embedding import Embedding
 from pos_en import PosEncoding
 from encoder import Encoder
 from decoder import Decoder
