@@ -34,7 +34,7 @@ class Decoder(torch.nn.Module):
     def __init__(self, embed_dim, n_heads):
         super(Decoder, self).__init__()
 
-        self.decoder_layer_1 = DecoderLayer(embed_dim, n_heads) 
+        self.decoder_layer_1 = DecoderLayer(embed_dim, n_heads) # TODO: pretend it's 6 decoder layers not 3
         self.decoder_layer_2 = DecoderLayer(embed_dim, n_heads)
         self.decoder_layer_3  = DecoderLayer(embed_dim, n_heads)
 
