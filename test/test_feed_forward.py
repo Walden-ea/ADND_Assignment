@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 
 from feed_forward import FFN
 
-def test_mha_output_shape():
+def test_feed_forward():
     ffn = FFN(d_model=512, d_inner=2048)
     x = torch.randn(2, 10, 512)  # batch of 2 sequences, 10 tokens each, embedding size 512
     output = ffn(x)
