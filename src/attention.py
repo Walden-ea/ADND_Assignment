@@ -14,7 +14,7 @@ def ScaledDotProductAttention(Q, K, V, d, mask=None):
 
 class MultiHeadAttention(nn.Module):
     # In paper d_model / d = d_k = d_v
-    def __init__(self, d_model, num_heads, d_k, d_v, batch_size):
+    def __init__(self, d_model, num_heads, d_k, d_v, batch_size, seq_len):
         super(MultiHeadAttention, self).__init__()
 
         self.d_model = d_model
@@ -22,6 +22,7 @@ class MultiHeadAttention(nn.Module):
         self.d_k = d_k
         self.d_v = d_v
         self.batch_size = batch_size
+        self.seq_len = seq_len
 
         self.weights_Q = nn.Linear(d_model, num_heads*d_k)
         self.weights_K = nn.Linear(d_model, num_heads*d_k)
@@ -31,16 +32,16 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, Q, K, V, mask=None):
         Q_proj = self.weights_Q(Q)
-        Q_reshaped = Q_proj.view(self.batch_size, -1, self.num_heads, self.d_k) # -1 is the length of the sequence
+        Q_reshaped = Q_proj.view(self.batch_size, self.seq_len, self.num_heads, self.d_k) 
         Q = Q_reshaped.transpose(1, 2) # so head is 1st (batch_size is on 0 pos)  
 
-        K = self.weights_K(K).reshape(self.batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
-        V = self.weights_V(V).reshape(self.batch_size, -1, self.num_heads, self.d_v).transpose(1, 2)
+        K = self.weights_K(K).reshape(self.batch_size, self.seq_len, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.weights_V(V).reshape(self.batch_size, self.seq_len, self.num_heads, self.d_v).transpose(1, 2)
 
         output = ScaledDotProductAttention(Q, K, V, self.d_k, mask)
 
         O_swap = output.transpose(1, 2)
-        O_flatten = O_swap.reshape(self.batch_size, -1, self.num_heads * self.d_k)
+        O_flatten = O_swap.reshape(self.batch_size, self.seq_len, self.num_heads * self.d_k)
           
         output = self.weights_output(O_flatten)
 
@@ -63,4 +64,4 @@ class MultiHeadAttention(nn.Module):
 # print("Output shape:", output.shape) # shoulb be [2,3,8]
 # # print(output)
 
-# # mask = torch.tril(torch.ones(64, 64)).bool()
+# # # mask = torch.tril(torch.ones(64, 64)).bool()
