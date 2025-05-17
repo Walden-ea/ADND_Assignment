@@ -27,11 +27,11 @@ class DecoderLayer(torch.nn.Module):
         self.norm3 = torch.nn.LayerNorm(embed_dim)
 
     def forward(self, x, encoder_data): # TODO: add masking!! ACTUALLY NOT NEEDED
-        self_attn_output, _ = self.self_attn(x, x, x)
+        self_attn_output = self.self_attn(x, x, x)
         x = x + self_attn_output
         x = self.norm1(x)
 
-        cross_attn_output, _ = self.cross_attn(x, encoder_data, encoder_data)
+        cross_attn_output = self.cross_attn(x, encoder_data, encoder_data)
         x = x + cross_attn_output
         x = self.norm2(x)
 
