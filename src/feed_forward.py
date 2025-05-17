@@ -19,10 +19,10 @@ class FFN(nn.Module):
 
         return output
 
-ffn = FFN(d_model=512, d_inner=2048)
+# ffn = FFN(d_model=512, d_inner=2048)
 
-x = torch.randn(2, 10, 512)  # batch of 2 sequences, 10 tokens each, embedding size 512
+# x = torch.randn(2, 10, 512)  # batch of 2 sequences, 10 tokens each, embedding size 512
 
-output = ffn(x)
+# output = ffn(x)
 
-print(output.shape)  # Should be (2, 10, 512)
+# print(output.shape)  # Should be (2, 10, 512)

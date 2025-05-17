@@ -46,21 +46,21 @@ class MultiHeadAttention(nn.Module):
 
         return output
 
-batch_size = 2
-seq_len = 3
-d_model = 8
-num_heads = 2
-d_k = 4
-d_v = 4
+# batch_size = 2
+# seq_len = 3
+# d_model = 8
+# num_heads = 2
+# d_k = 4
+# d_v = 4
 
-Q = torch.randn(batch_size, seq_len, d_model)
-K = torch.randn(batch_size, seq_len, d_model)
-V = torch.randn(batch_size, seq_len, d_model)
+# Q = torch.randn(batch_size, seq_len, d_model)
+# K = torch.randn(batch_size, seq_len, d_model)
+# V = torch.randn(batch_size, seq_len, d_model)
 
-mha = MultiHeadAttention(d_model, num_heads, d_k, d_v, batch_size)
+# mha = MultiHeadAttention(d_model, num_heads, d_k, d_v, batch_size)
 
-output = mha(Q, K, V)
-print("Output shape:", output.shape) # shoulb be [2,3,8]
-# print(output)
+# output = mha(Q, K, V)
+# print("Output shape:", output.shape) # shoulb be [2,3,8]
+# # print(output)
 
-# mask = torch.tril(torch.ones(64, 64)).bool()
+# # mask = torch.tril(torch.ones(64, 64)).bool()
