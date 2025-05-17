@@ -21,7 +21,7 @@ class PosEncoding(nn.Module):
         self.encoding = torch.zeros(max_len, embedding_dim)
         self.encoding[:,::2] = torch.sin(positions_mtrx / divisors)[:,::2]
         self.encoding[:,1::2] = torch.cos(positions_mtrx / divisors)[:,1::2].unsqueeze(0)
-        print(self.encoding)
+        # print(self.encoding)
         
     def forward(self, x):
         batch_size = x.shape[0]
